@@ -590,24 +590,16 @@ st.markdown('<p class="sub-header">Comprehensive Analysis & Insights for Entrepr
 log_usage_analytics()
 
 # Sidebar Configuration
-st.sidebar.markdown("## 🔧 Configuration Panel")
+st.sidebar.markdown("## 📊 Data Source")
+st.sidebar.success("✅ Connected to Default Business Plans Sheet")
+st.sidebar.info("Using hardcoded Google Sheet with sample business plans")
 
-# Default sheet configuration
-default_sheet_id = "1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4"
-sheet_id = st.sidebar.text_input(
-    "📊 Google Sheet ID", 
-    value=default_sheet_id,
-    help="Enter the Google Sheet ID from the URL"
-)
+# Hard-coded sheet configuration
+sheet_id = "1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4"
+gid = 0
 
-gid = st.sidebar.number_input(
-    "📄 Sheet GID (0 for first sheet)", 
-    value=0,
-    help="Sheet GID number (usually 0 for the first sheet)"
-)
-
-# Fetch data
-if sheet_id:
+# Always fetch data with the hardcoded sheet
+if True:
     with st.spinner("🔄 Loading business plan data..."):
         df = fetch_public_sheet_data(sheet_id, gid)
     
@@ -802,19 +794,19 @@ else:
         </div>
         
         <div style="margin-top: 40px; padding: 30px; background: #f8f9ff; border-radius: 15px; border-left: 5px solid #667eea;">
-            <h3 style="color: #495057; margin-bottom: 20px;">🚀 Getting Started</h3>
+            <h3 style="color: #495057; margin-bottom: 20px;">🚀 Ready to Explore!</h3>
             <div style="text-align: left; max-width: 600px; margin: 0 auto;">
-                <p style="margin-bottom: 15px;"><strong>1.</strong> The default Google Sheet is already loaded with sample business plans</p>
-                <p style="margin-bottom: 15px;"><strong>2.</strong> Use the sidebar to configure different public Google Sheets (optional)</p>
-                <p style="margin-bottom: 15px;"><strong>3.</strong> Explore the analytics dashboard and filter business plans</p>
-                <p style="margin-bottom: 15px;"><strong>4.</strong> Click on any business plan to view detailed information</p>
-                <p style="margin-bottom: 0;"><strong>5.</strong> Export your filtered results as CSV reports</p>
+                <p style="margin-bottom: 15px;"><strong>📊</strong> Real business plan data is automatically loaded</p>
+                <p style="margin-bottom: 15px;"><strong>🔍</strong> Use the search and filtering tools to find specific plans</p>
+                <p style="margin-bottom: 15px;"><strong>📈</strong> Explore the interactive analytics dashboard above</p>
+                <p style="margin-bottom: 15px;"><strong>📋</strong> Click through detailed business plan cards below</p>
+                <p style="margin-bottom: 0;"><strong>📥</strong> Export filtered results as CSV reports</p>
             </div>
         </div>
         
         <div style="margin-top: 30px;">
             <p style="color: #6c757d; font-style: italic;">
-                💡 Tip: Make sure your Google Sheet is publicly accessible for the best experience
+                💡 Data Source: <a href="https://docs.google.com/spreadsheets/d/1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4/edit?usp=drivesdk" target="_blank">View Original Google Sheet</a>
             </p>
         </div>
     </div>
@@ -822,20 +814,19 @@ else:
 
 # Enhanced sidebar information
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 📊 Sample Data Included")
-st.sidebar.info("The default sheet contains real business plan examples for demonstration purposes.")
+st.sidebar.markdown("### 📊 Data Information")
+st.sidebar.info("Connected to hardcoded business plans dataset with real entrepreneurial data.")
 
-st.sidebar.markdown("### 🔧 Custom Sheet Setup")
+st.sidebar.markdown("### 🔗 Source Sheet")
 st.sidebar.markdown("""
-**To use your own Google Sheet:**
-1. Make your Google Sheet publicly viewable
-2. Copy the Sheet ID from the URL
-3. Enter it in the field above
-4. Adjust the GID if needed (0 for first sheet)
+**Direct Link:**  
+[View Google Sheet](https://docs.google.com/spreadsheets/d/1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4/edit?usp=drivesdk)
+
+**Sheet ID:** `1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4`
 """)
 
-st.sidebar.markdown("### 📋 Required Columns")
-with st.sidebar.expander("View Required Columns"):
+st.sidebar.markdown("### 📋 Data Columns")
+with st.sidebar.expander("View All 16 Columns"):
     required_cols = [
         "Name", "Email", "Business Idea", "Business Name", "Startup Costs",
         "Business Goals (3 months)", "Business Goals (6 months)", "Business Goals (12 months)",
