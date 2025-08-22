@@ -46,6 +46,27 @@ st.markdown("""
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
         overflow: hidden;
+        color: #000000 !important;
+    }
+    
+    .business-card * {
+        color: #000000 !important;
+    }
+    
+    .business-card h1,
+    .business-card h2,
+    .business-card h3,
+    .business-card h4,
+    .business-card h5,
+    .business-card h6 {
+        color: #667eea !important;
+    }
+    
+    .business-card p,
+    .business-card div,
+    .business-card span,
+    .business-card li {
+        color: #000000 !important;
     }
     
     .business-card::before {
@@ -130,6 +151,15 @@ st.markdown("""
         border-radius: 10px;
         margin: 10px 0;
         border-left: 4px solid #667eea;
+        color: #000000 !important;
+    }
+    
+    .goal-timeline * {
+        color: #000000 !important;
+    }
+    
+    .goal-timeline h4 {
+        color: #667eea !important;
     }
     
     .filter-container {
@@ -188,9 +218,26 @@ st.markdown("""
         transition: all 0.3s ease;
     }
     
-    .export-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    /* Force all text in Streamlit content to be black */
+    .stMarkdown p,
+    .stMarkdown div,
+    .stMarkdown span,
+    .stWrite p,
+    .stWrite div,
+    .stWrite span {
+        color: #000000 !important;
+    }
+    
+    /* Keep section headers with accent color */
+    .stMarkdown h3,
+    .stMarkdown h4 {
+        color: #667eea !important;
+    }
+    
+    /* Ensure tab content text is black */
+    .stTabs [data-baseweb="tab-panel"] p,
+    .stTabs [data-baseweb="tab-panel"] div {
+        color: #000000 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -295,9 +342,9 @@ def create_enhanced_business_card(row, index):
         <div class="business-card">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
                 <div style="flex: 1;">
-                    <h2 style="color: #667eea; margin-bottom: 5px; font-weight: 700;">🚀 {row.get('Business Name', 'N/A')}</h2>
-                    <p style="color: #6c757d; font-size: 1.1em;"><strong>👤 Founder:</strong> {row.get('Name', 'N/A')}</p>
-                    <p style="color: #6c757d; font-size: 1.1em;"><strong>📧 Contact:</strong> {row.get('Email', 'N/A')}</p>
+                    <h2 style="color: #667eea !important; margin-bottom: 5px; font-weight: 700;">🚀 {row.get('Business Name', 'N/A')}</h2>
+                    <p style="color: #000000 !important; font-size: 1.1em;"><strong>👤 Founder:</strong> {row.get('Name', 'N/A')}</p>
+                    <p style="color: #000000 !important; font-size: 1.1em;"><strong>📧 Contact:</strong> {row.get('Email', 'N/A')}</p>
                 </div>
                 <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 10px 15px; border-radius: 20px; font-weight: 600;">
                     #{index + 1}
@@ -342,8 +389,8 @@ def create_enhanced_business_card(row, index):
             for period, goal in goals_data:
                 st.markdown(f"""
                 <div class="goal-timeline">
-                    <h4 style="color: #667eea; margin-bottom: 10px;">📅 {period}</h4>
-                    <p style="margin: 0;">{goal}</p>
+                    <h4 style="color: #667eea !important; margin-bottom: 10px;">📅 {period}</h4>
+                    <p style="margin: 0; color: #000000 !important;">{goal}</p>
                 </div>
                 """, unsafe_allow_html=True)
             
