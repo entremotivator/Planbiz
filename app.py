@@ -200,22 +200,40 @@ st.markdown("""
 # -------------------------------
 
 @st.cache_data(ttl=300)
-def fetch_public_sheet_data(sheet_id, gid=0):
-    """Fetch data from public Google Sheet using CSV export"""
+def fetch_public_sheet_data(sheet_id):
+    """Fetch data from public Google Sheet using CSV export - pulls all sheets"""
     try:
-        url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"
-        response = requests.get(url)
-        response.raise_for_status()
+        # Try multiple approaches to get the data
+        urls_to_try = [
+            f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv",  # Default sheet
+            f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid=0",  # First sheet explicitly
+            f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv",  # Alternative export method
+        ]
         
-        # Read CSV data
-        df = pd.read_csv(io.StringIO(response.text))
+        for url in urls_to_try:
+            try:
+                response = requests.get(url, timeout=10)
+                response.raise_for_status()
+                
+                # Read CSV data
+                df = pd.read_csv(io.StringIO(response.text))
+                
+                # Clean column names (remove extra spaces)
+                df.columns = df.columns.str.strip()
+                
+                # Check if we got valid data
+                if len(df) > 0 and len(df.columns) > 1:
+                    return df
+                    
+            except Exception as e:
+                continue  # Try next URL
         
-        # Clean column names (remove extra spaces)
-        df.columns = df.columns.str.strip()
+        # If all URLs fail, raise an error
+        raise Exception("Unable to fetch data from any of the attempted URLs")
         
-        return df
     except Exception as e:
         st.error(f"Error fetching data: {e}")
+        st.info("💡 Tip: Make sure the Google Sheet is publicly accessible (Anyone with the link can view)")
         return pd.DataFrame()
 
 def extract_numeric_value(text):
@@ -596,12 +614,11 @@ st.sidebar.info("Using hardcoded Google Sheet with sample business plans")
 
 # Hard-coded sheet configuration
 sheet_id = "1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4"
-gid = 0
 
-# Always fetch data with the hardcoded sheet
+# Always fetch data with the hardcoded sheet (no GID needed)
 if True:
     with st.spinner("🔄 Loading business plan data..."):
-        df = fetch_public_sheet_data(sheet_id, gid)
+        df = fetch_public_sheet_data(sheet_id)
     
     if not df.empty:
         # Ensure all required columns exist
@@ -755,7 +772,21 @@ if True:
             """, unsafe_allow_html=True)
     
     else:
-        st.error("❌ Unable to fetch data from the Google Sheet. Please check the Sheet ID and ensure it's publicly accessible.")
+        st.error("❌ Unable to fetch data from the Google Sheet.")
+        st.markdown("""
+        ### 🔧 Troubleshooting Steps:
+        1. **Check Sheet Access**: Ensure the Google Sheet is publicly accessible
+        2. **Verify Link**: The sheet link should work when opened in a browser
+        3. **Sheet Format**: Make sure the sheet contains the expected columns
+        4. **Try Refresh**: Sometimes a simple page refresh resolves connectivity issues
+        
+        ### 📊 Expected Data Format:
+        The sheet should contain business plan data with columns like:
+        - Name, Email, Business Name, Business Idea, Startup Costs, etc.
+        
+        ### 🔗 Current Sheet: 
+        [https://docs.google.com/spreadsheets/d/1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4/](https://docs.google.com/spreadsheets/d/1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4/)
+        """, unsafe_allow_html=True)
 
 else:
     # Enhanced welcome screen
@@ -823,7 +854,9 @@ st.sidebar.markdown("""
 [View Google Sheet](https://docs.google.com/spreadsheets/d/1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4/edit?usp=drivesdk)
 
 **Sheet ID:** `1WNFuryFtCQ9j8Wp1DTR0WhGkkxpkqU2ZgQ6SQ6wk3d4`
-""")
+
+**Data Loading:** Multiple URL attempts for maximum compatibility
+""", unsafe_allow_html=True)
 
 st.sidebar.markdown("### 📋 Data Columns")
 with st.sidebar.expander("View All 16 Columns"):
